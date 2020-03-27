@@ -97,7 +97,7 @@ export default class UserAccountSetting extends React.Component {
                     }
                 }.bind(this),
                 error: function (res) {
-                    console.log(res);
+                    
                     TalentUtil.notification.show("Error while saving data", "error");
                 }
             });

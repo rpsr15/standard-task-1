@@ -43,7 +43,7 @@ export default class PhotoUpload extends Component {
           
         };
         reader.onerror = function (error) {
-            //console.log('Error: ', error);
+            //
         }
     }
 
@@ -58,7 +58,7 @@ export default class PhotoUpload extends Component {
 
     componentWillReceiveProps(props)
     {
-        console.log("component wi;ll receive props",props.imageData)
+        
         if(props.imageData)
         {
             this.setState({

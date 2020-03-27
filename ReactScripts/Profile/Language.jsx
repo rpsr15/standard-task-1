@@ -30,6 +30,9 @@ const languageLevels = [
     }
 ]
 
+const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) => s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h))
+
+
 export default class Language extends React.Component {
     constructor(props) {
         super(props);
@@ -64,8 +67,8 @@ export default class Language extends React.Component {
 
         this.state.languages.forEach(language => {
             if (language.name.toLowerCase() === newLanguage.toLowerCase()) {
-                //console.log("comparing "+ language.name + " to"+ newLanguage)
-                //console.log("returning false")
+                //
+                //
                 canAdd = false;
             }
         });
@@ -74,6 +77,7 @@ export default class Language extends React.Component {
     }
 
     componentWillReceiveProps(props) {
+        
         if (props.languageData) {
 
             this.setState({
@@ -83,10 +87,12 @@ export default class Language extends React.Component {
     }
 
     handleAddNew() {
-
+        const id = ObjectId();
+        
         if (this.canAddLanguage(this.state.selectedLanguage)) {
             this.state.languages.push({
-                key: this.state.selectedLanguage,
+                id: id,
+                key: id, 
                 name: this.state.selectedLanguage,
                 level: this.state.selectedLevel
             })
@@ -121,11 +127,11 @@ export default class Language extends React.Component {
         })
     }
 
-    handleEdit(name,level) {
+    handleEdit(language) {
         this.setState({
-            editLanguage: name,
-            newName: name,
-            newLevel: level
+            editLanguage: language.id,
+            newName: language.name,
+            newLevel: language.level
         })
     }
     cancelEdit()
@@ -134,10 +140,10 @@ export default class Language extends React.Component {
             editLanguage:''
         })
     }
-    handleDelete(name) {
-        //console.log("handle delelte", name )
+    handleDelete(id) {
+        //
         const filtered = this.state.languages.filter(lang => {
-            if (lang.name != name) {
+            if (lang.id != id) {
                 return lang;
             }
         })
@@ -150,14 +156,14 @@ export default class Language extends React.Component {
 
     handleEditName(event,data)
     {
-        console.log(data.value)
+        
         this.setState({
             newName: data.value
         })
     }
     handleEditLevel(event,data)
     {
-        console.log(data.value)
+        
         this.setState({
             newLevel: data.value
         })
@@ -165,17 +171,14 @@ export default class Language extends React.Component {
     update(e)
     {
         e.preventDefault();
-        console.log("upafsdf")
-        console.log('before',this.state.languages)
         this.state.languages.map((lang) => {
-            if(lang.name === this.state.editLanguage)
+            if(lang.id === this.state.editLanguage)
             {
                 lang.name = this.state.newName;
                 lang.level = this.state.newLevel;
                 
             }
         })
-        console.log("after",this.state.languages)
         this.setState({
             languages: this.state.languages,
             editLanguage:'',
@@ -190,7 +193,7 @@ export default class Language extends React.Component {
      
        
         return (
-            <Table.Row key={language.name}>
+            <Table.Row key={language.id}>
                 <Table.Cell>
                 <Input  maxLength='18' value={this.state.newName} onChange={this.handleEditName} placeholder={language.name}></Input>
                 </Table.Cell>
@@ -215,12 +218,12 @@ export default class Language extends React.Component {
     }
     displayRow(language) {
         return (
-            <Table.Row key={language.name}>
+            <Table.Row key={language.id}>
                 <Table.Cell>{language.name}</Table.Cell>
                 <Table.Cell>{language.level}</Table.Cell>
                 <Table.Cell style={{ textAlign: 'right' }}>
-                    <Icon name='edit' onClick={ () => this.handleEdit(language.name, language.level)} />
-                    <Icon name='close' onClick={ () => this.handleDelete(language.name) } />
+                    <Icon name='edit' onClick={ () => this.handleEdit(language)} />
+                    <Icon name='close' onClick={ () => this.handleDelete(language.id) } />
                 </Table.Cell>
             </Table.Row>
         )
@@ -247,7 +250,7 @@ export default class Language extends React.Component {
             <Table.Body>
                 {
                     this.state.languages.map((language) => {
-                        if(this.state.editLanguage === language.name)
+                        if(this.state.editLanguage === language.id)
                         {
                             return this.displayEditRow(language)
                         }else{

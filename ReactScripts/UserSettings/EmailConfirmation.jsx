@@ -7,16 +7,16 @@ export default class EmailConfirmation extends React.Component {
     constructor(props) {
         super(props);
         isVerified: true;
-        console.log(this.props.location.search);
+        
         const values = queryString.parse(this.props.location.search);
-        console.log(values);
+        
 
         this.state = {
             pagetype: values.pagetype,
             token: values.token
         }
-        //console.log(this.props.match.params.pageType);
-        //console.log(this.props.match.params.token);
+        //
+        //
     }
     componentDidMount() {
         //verifyEmail

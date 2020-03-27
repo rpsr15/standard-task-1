@@ -67,7 +67,7 @@ export default class AccountProfile extends React.Component {
     }
 
     loadData() {
-        ////console.log("load data");
+        ////
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
             url: 'https://talent-services-profile.azurewebsites.net/profile/profile/getTalentProfile',
@@ -77,7 +77,7 @@ export default class AccountProfile extends React.Component {
             },
             type: "GET",
             success: function (res) {
-                //console.log("response",res.data.experience);
+            
                 this.updateWithoutSave(res.data)
             }.bind(this)
         })
@@ -94,7 +94,7 @@ export default class AccountProfile extends React.Component {
     //updates component's state and saves data
     updateAndSaveData(newValues) {
         let newProfile = Object.assign({}, this.state.profileData, newValues)
-        //console.log("new profile", newProfile.experience);
+        //
 
         this.setState({
             profileData: newProfile
@@ -106,7 +106,7 @@ export default class AccountProfile extends React.Component {
     }
 
     saveProfile() {
-        console.log("sending", this.state.profileData.experience)
+        
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
             url: 'https://talent-services-profile.azurewebsites.net/profile/profile/updateTalentProfile',
@@ -117,7 +117,7 @@ export default class AccountProfile extends React.Component {
             type: "POST",
             data: JSON.stringify(this.state.profileData),
             success: function (res) {
-                console.log("reponse sflsadf",res)
+                
                 if (res.success == true) {
                     TalentUtil.notification.show("Profile updated sucessfully", "success", null, null)
                 } else {
@@ -126,9 +126,9 @@ export default class AccountProfile extends React.Component {
 
             }.bind(this),
             error: function (res, a, b) {
-                ////console.log(res)
-                ////console.log(a)
-                ////console.log(b)
+                ////
+                ////
+                ////
             }
         })
     }

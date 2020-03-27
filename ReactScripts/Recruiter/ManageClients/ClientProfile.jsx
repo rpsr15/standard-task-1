@@ -39,7 +39,7 @@ class ClientProfileModal extends React.Component {
                     this.updateWithoutSave(employerData)
                 }.bind(this),
                 error: function (res) {
-                    console.log(res.status)
+                    
                 }
             })
         }

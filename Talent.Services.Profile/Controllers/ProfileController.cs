@@ -427,6 +427,7 @@ namespace Talent.Services.Profile.Controllers
         public async Task<IActionResult> UpdateTalentProfile([FromBody]TalentProfileViewModel profile)
         {
             Console.WriteLine("before model valiatino");
+            Console.WriteLine(profile);
             if (ModelState.IsValid)
             {
                 if (await _profileService.UpdateTalentProfile(profile, _userAppContext.CurrentUserId))

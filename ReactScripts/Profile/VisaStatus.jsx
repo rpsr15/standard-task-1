@@ -31,10 +31,10 @@ export default class VisaStatus extends React.Component {
         if(this.props.visaExpiryDate != null) {
             const date = new Date(this.props.visaExpiryDate);
             const dateString = date.getDate()+"/"+ (date.getMonth()+1)+"/"+date.getFullYear();
-            //console.log("date sring",dateString,typeof(dateString)," state",this.state.date, typeof(this.state.date))
+            //
             if(dateString !== this.state.date)
             {
-                 //console.log("changed")
+                 //
                 return true;
             }
             
@@ -48,14 +48,14 @@ export default class VisaStatus extends React.Component {
     }
 
     handleChange(event, data) {
-        ////console.log("handle visa statua", data);
+        ////
         this.setState({
             selectedStatus: data.value
         })
     }
 
     handleDateChange(event, data) {
-        //console.log(data.value);
+        //
         this.setState({
             date: data.value
         })

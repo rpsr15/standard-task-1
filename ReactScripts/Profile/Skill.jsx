@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import { Table, Dropdown, Input, Icon, Button } from 'semantic-ui-react'
 import FormItemWrapper from '../Form/FormItemWrapper.jsx';
 import './css/style.css';
+const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) => s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h))
 
 
 const skillLevels = [
@@ -57,8 +58,8 @@ export default class Skill extends React.Component {
 
         this.state.skills.forEach(skill => {
             if (skill.name.toLowerCase() === newSkill.toLowerCase()) {
-                ////console.log("comparing "+ skill.name + " to"+ newSkill)
-                ////console.log("returning false")
+                ////
+                ////
                 canAdd = false;
             }
         });
@@ -76,10 +77,11 @@ export default class Skill extends React.Component {
     }
 
     handleAddNew() {
-
+        const id = ObjectId();
         if (this.canAddSkill(this.state.selectedSkill)) {
             this.state.skills.push({
-                key: this.state.selectedSkill,
+                id: id,
+                key: id,
                 name: this.state.selectedSkill,
                 level: this.state.selectedLevel
             })
@@ -114,11 +116,11 @@ export default class Skill extends React.Component {
         })
     }
 
-    handleEdit(name,level) {
+    handleEdit(skill) {
         this.setState({
-            editSkill: name,
-            newName: name,
-            newLevel: level
+            editSkill: skill.id,
+            newName: skill.name,
+            newLevel: skill.level
         })
     }
     cancelEdit()
@@ -127,10 +129,10 @@ export default class Skill extends React.Component {
             editSkill:''
         })
     }
-    handleDelete(name) {
-        ////console.log("handle delelte", name )
+    handleDelete(id) {
+        ////
         const filtered = this.state.skills.filter(lang => {
-            if (lang.name != name) {
+            if (lang.id != id) {
                 return lang;
             }
         })
@@ -143,14 +145,14 @@ export default class Skill extends React.Component {
 
     handleEditName(event,data)
     {
-        //console.log(data.value)
+        //
         this.setState({
             newName: data.value
         })
     }
     handleEditLevel(event,data)
     {
-        //console.log(data.value)
+        //
         this.setState({
             newLevel: data.value
         })
@@ -158,17 +160,17 @@ export default class Skill extends React.Component {
     update(e)
     {
         e.preventDefault();
-        //console.log("upafsdf")
-        //console.log('before',this.state.skills)
+        //
+        //
         this.state.skills.map((lang) => {
-            if(lang.name === this.state.editSkill)
+            if(lang.id === this.state.editSkill)
             {
                 lang.name = this.state.newName;
                 lang.level = this.state.newLevel;
                 
             }
         })
-        //console.log("after",this.state.skills)
+        //
         this.setState({
             skills: this.state.skills,
             editSkill:'',
@@ -183,9 +185,9 @@ export default class Skill extends React.Component {
      
        
         return (
-            <Table.Row key={skill.name}>
+            <Table.Row key={skill.id}>
                 <Table.Cell>
-                <Input maxLength='15' value={this.state.newName} onChange={this.handleEditName} placeholder={skill.name}></Input>
+                <Input maxLength='15' value={this.state.newName} onChange={this.handleEditName} ></Input>
                 </Table.Cell>
                 <Table.Cell>
                 <Dropdown 
@@ -208,12 +210,12 @@ export default class Skill extends React.Component {
     }
     displayRow(skill) {
         return (
-            <Table.Row key={skill.name}>
+            <Table.Row key={skill.id}>
                 <Table.Cell>{skill.name}</Table.Cell>
                 <Table.Cell>{skill.level}</Table.Cell>
                 <Table.Cell style={{ textAlign: 'right' }}>
-                    <Icon name='edit' onClick={ () => this.handleEdit(skill.name, skill.level)} />
-                    <Icon name='close' onClick={ () => this.handleDelete(skill.name) } />
+                    <Icon name='edit' onClick={ () => this.handleEdit(skill)} />
+                    <Icon name='close' onClick={ () => this.handleDelete(skill.id) } />
                 </Table.Cell>
             </Table.Row>
         )
@@ -240,7 +242,7 @@ export default class Skill extends React.Component {
             <Table.Body>
                 {
                     this.state.skills.map((skill) => {
-                        if(this.state.editSkill === skill.name)
+                        if(this.state.editSkill === skill.id)
                         {
                             return this.displayEditRow(skill)
                         }else{

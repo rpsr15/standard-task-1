@@ -5,6 +5,27 @@ import { Location } from '../Employer/CreateJob/Location.jsx';
 export class IndividualDetailSection extends Component {
     constructor(props) {
         super(props)
+        
+        this.state = {
+            showEditSection: false,
+            newContact: {
+                firstName: "",
+                lastName: "",
+                email: "",
+                phone: ""
+            }
+        }
+
+        this.openEdit = this.openEdit.bind(this)
+        this.closeEdit = this.closeEdit.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.saveContact = this.saveContact.bind(this)
+        this.renderEdit = this.renderEdit.bind(this)
+        this.renderDisplay = this.renderDisplay.bind(this)
+    }
+    componentWillReceiveProps(props)
+    {
+
 
         const details = props.details ?
             Object.assign({}, props.details)
@@ -14,18 +35,10 @@ export class IndividualDetailSection extends Component {
                 email: "",
                 phone: ""
             }
-
-        this.state = {
-            showEditSection: false,
+        this.setState({
             newContact: details
-        }
+        })
 
-        this.openEdit = this.openEdit.bind(this)
-        this.closeEdit = this.closeEdit.bind(this)
-        this.handleChange = this.handleChange.bind(this)
-        this.saveContact = this.saveContact.bind(this)
-        this.renderEdit = this.renderEdit.bind(this)
-        this.renderDisplay = this.renderDisplay.bind(this)
     }
 
     openEdit() {
@@ -51,8 +64,6 @@ export class IndividualDetailSection extends Component {
     }
 
     saveContact() {
-        //console.log(this.props.componentId)
-        //console.log(this.state.newContact)
         const data = Object.assign({}, this.state.newContact)
         this.props.controlFunc(this.props.componentId, data)
         this.closeEdit()
@@ -71,7 +82,7 @@ export class IndividualDetailSection extends Component {
                     inputType="text"
                     label="First Name"
                     name="firstName"
-                    value={this.state.newContact.firstName}
+                    value={ (this.state.newContact.firstName == null)?'':this.state.newContact.firstName}
                     controlFunc={this.handleChange}
                     maxLength={80}
                     placeholder="Enter your first name"
@@ -81,7 +92,7 @@ export class IndividualDetailSection extends Component {
                     inputType="text"
                     label="Last Name"
                     name="lastName"
-                    value={this.state.newContact.lastName}
+                    value={this.state.newContact.lastName == null ? '' : this.state.newContact.lastName}
                     controlFunc={this.handleChange}
                     maxLength={80}
                     placeholder="Enter your last name"
@@ -91,7 +102,7 @@ export class IndividualDetailSection extends Component {
                     inputType="text"
                     label="Email address"
                     name="email"
-                    value={this.state.newContact.email}
+                    value={this.state.newContact.email == null ? '' : this.state.newContact.email}
                     controlFunc={this.handleChange}
                     maxLength={80}
                     placeholder="Enter an email"
@@ -102,7 +113,7 @@ export class IndividualDetailSection extends Component {
                     inputType="text"
                     label="Phone number"
                     name="phone"
-                    value={this.state.newContact.phone}
+                    value={this.state.newContact.phone == null ? '': this.state.newContact.phone}
                     controlFunc={this.handleChange}
                     maxLength={12}
                     placeholder="Enter a phone number"

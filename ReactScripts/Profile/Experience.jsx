@@ -7,7 +7,7 @@ import {
     DateInput
 } from 'semantic-ui-calendar-react';
 
-
+const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) => s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h))
 export default class Experience extends React.Component {
     constructor(props) {
         super(props);
@@ -24,16 +24,16 @@ export default class Experience extends React.Component {
                 company: '',
                 position: '',
                 responsibilities: '',
-                start: null,
-                end: null
+                start: (new Date()),
+                end: (new Date())
             },
             editedExperience:{
                 id:'',
                 company: '',
                 position: '',
                 responsibilities: '',
-                start: null,
-                end: null
+                start: (new Date()),
+                end: (new Date())
             }
         }
         this.handleAddNew = this.handleAddNew.bind(this);
@@ -46,26 +46,41 @@ export default class Experience extends React.Component {
         this.handleEndDateChange = this.handleEndDateChange.bind(this)
         this.handleStartDateChange = this.handleStartDateChange.bind(this)
         this.handleCheckBox = this.handleCheckBox.bind(this)
+        this.getDateString = this.getDateString.bind(this)
 
     }
 
+    getDateString(date)
+    {
+        const dateVal = new Date(date)
+        var result =  dateVal.getDate()+"/"+(dateVal.getMonth()+1)+"/"+dateVal.getFullYear()
+        if(result == '1/1/1900')
+        {
+            const date = new Date()
+            result = ''
+        }
+        return result
+    }
     handleAddNew() {
-        
-        if(this.state.newExperience.company === '' || this.state.newExperience.position === '' || this.state.newExperience.start === null || ( this.state.newExperience.end === null && !this.state.isCurrentPosition))
+       
+        if(this.state.newExperience.company === '' || this.state.newExperience.position === '' )
         {
             this.setState({ showError: true})
         }
         else{
             var experiences = this.state.experiences
             var newExperience = this.state.newExperience
-            if (newExperience.end === null) {
+            if (this.state.isCurrentPosition) {
 
                 newExperience.end = new Date('01/01/1900')
             }
-            const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) => s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h))
+            
             
             newExperience.id  = ObjectId();
+           
             experiences.push(newExperience);
+            this.props.updateProfileData({experience: experiences})
+            
             this.setState({
                 experiences: experiences,
                 showEdit: false,
@@ -75,12 +90,9 @@ export default class Experience extends React.Component {
                     company: '',
                     position: '',
                     responsibilities: '',
-                    start: null,
-                    end: null
+                    start: (new Date()),
+                    end: (new Date())
                 }
-            }, function () {
-                ////console.log("updating profile", this.state.experiences)
-                this.props.updateProfileData({ experience: this.state.experiences })
             })
         }
 
@@ -97,15 +109,15 @@ export default class Experience extends React.Component {
                 company: '',
                 position: '',
                 responsibilities: '',
-                start: null,
-                end: null
+                start: (new Date()),
+                end: (new Date())
             }
         })
     }
 
 
     displayRow(experience) {
-        ////console.log(experience)
+        ////
         var startDate = null;
         var endDate = null;
         if (experience.start) {
@@ -122,7 +134,7 @@ export default class Experience extends React.Component {
             }
 
         }
-        //////console.log("endstring",endDateString)
+        //////
         return (<Table.Row key={experience.id} >
             <Table.Cell style={{ margin:'0',maxWidth:'2rem',overflowWrap:'break-word', wordWrap:'break-word', hyphens:'auto'}} > {experience.company} </Table.Cell>
             <Table.Cell style={{ margin:'0',maxWidth:'2rem',overflowWrap:'break-word', wordWrap:'break-word', hyphens:'auto'}}>{experience.position}</Table.Cell>
@@ -153,8 +165,8 @@ export default class Experience extends React.Component {
     }
     displayEditRow(experience) {
         return ( 
-            <Table.Row >
-                <Table.Cell colspan='5'>
+            <Table.Row  key={experience.id}>
+                <Table.Cell colSpan='5'>
 {  this.displayEditARow(experience)}
                 </Table.Cell>
             </Table.Row>
@@ -225,10 +237,12 @@ export default class Experience extends React.Component {
     }
 
     handleStartDateChange(event, data) {
-        var dateParts = data.value.split("/");
-        var date = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
         const newExp = this.state.newExperience;
-        newExp.start = date;
+        var dateParts = data.value.split("/");
+
+// month is 0-based, that's why we need dataParts[1] - 1
+var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+        newExp.start = dateObject;
         this.setState({
             newExperience: newExp
         })
@@ -236,8 +250,10 @@ export default class Experience extends React.Component {
     handleEndDateChange(event, data) {
         const newExp = this.state.newExperience;
         var dateParts = data.value.split("/");
-        var date = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
-        newExp.end = date
+
+        // month is 0-based, that's why we need dataParts[1] - 1
+        var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                newExp.end = dateObject;
         this.setState({
             newExperience: newExp
         })
@@ -250,15 +266,40 @@ export default class Experience extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        //console.log(props)
-        this.setState({
-            experiences: props.experienceData
-        })
+        //
+        if(props.experienceData)
+        {
+            if(props.experienceData.length > 0)
+            {
+               props.experienceData.map((exp) => {
+                   if(exp.start != null)
+                   {
+                   
+                    exp.start = new Date(exp.start)
+                   }else{
+                    exp.start= new Date('01/01/1900')
+                   }
+                   if(exp.end != null)
+                   {
+           
+                    exp.end = new Date(exp.end)
+                   }else{
+                    exp.end = new Date('01/01/1900')
+                   }
+
+               })
+
+               this.setState({
+                experiences: props.experienceData
+            })
+            }
+        }
+        
     }
 
     displayEditARow() {
        
-        //console.log((new Date(this.state.editedExperience.end)).getFullYear() == '1900');
+        //
         return (
 
             <div className='ui grid' style={{ width: '100%' }}>
@@ -292,7 +333,7 @@ export default class Experience extends React.Component {
                             dateFormat="DD/MM/YYYY"
                             name="date"
                             placeholder="Date"
-                            value={ (new Date(this.state.editedExperience.start))}
+                            value={ this.getDateString(this.state.editedExperience.start) }
                             onChange={(event,data) => {
                                 var dateParts = data.value.split("/");
                                 var date = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
@@ -308,11 +349,12 @@ export default class Experience extends React.Component {
                     <div className='column' style={{ width: '50%' }}>
                         <label>End Date:</label>
                         <DateInput
+                            minDate={this.getDateString(this.state.editedExperience.start)}
                             disabled={this.state.isCurrentPosition}
                             dateFormat="DD/MM/YYYY"
                             name="date"
                             placeholder="Date"
-                            value={  (  (new Date(this.state.editedExperience.end)).getFullYear() == '1900' )? (new Date()): (new Date(this.state.editedExperience.end))}
+                            value={    this.getDateString(this.state.editedExperience.end) }
                             onChange={(event,data) => {
                                 var dateParts = data.value.split("/");
                                 var date = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
@@ -351,23 +393,30 @@ export default class Experience extends React.Component {
                             toEdit.position = this.state.editedExperience.position;
                             toEdit.responsibilities = this.state.editedExperience.responsibilities;
                             toEdit.start = this.state.editedExperience.start;
-                            toEdit.end = this.state.editedExperience.end;
+                            if(this.state.isCurrentPosition == true)
+                            {
+                                toEdit.end = new Date('01/01/1900')
+                            }else{
+                                toEdit.end = this.state.editedExperience.end;
+                            }
+                            
                             this.setState({
                                 editCompany:'',
+                                isCurrentPosition: false,
                                 experiences: experiences,
                                 editedExperience:{
                                     id:'',
                                     company: '',
                                     position: '',
                                     responsibilities: '',
-                                    start: null,
-                                    end: null
+                                    start: (new Date()),
+                                    end: (new Date())
                                 }
                             }, function(){
 
                                 this.props.updateProfileData({ experience: this.state.experiences})
                             })
-                            //console.log("to edit", toEdit)
+                            //
                         }}>Update</button>
                         <button type="button" className="ui left floated gray button" onClick={() => {
                             this.setState({
@@ -377,8 +426,8 @@ export default class Experience extends React.Component {
                                     company: '',
                                     position: '',
                                     responsibilities: '',
-                                    start: null,
-                                    end: null
+                                    start: (new Date()),
+                                    end: (new Date())
                                 }
                             })
                         }}>Cancel</button>
@@ -413,7 +462,7 @@ export default class Experience extends React.Component {
                             dateFormat="DD/MM/YYYY"
                             name="date"
                             placeholder="Date"
-                            value={this.state.newExperience.start}
+                            value={  this.getDateString(this.state.newExperience.start) }
                             onChange={this.handleStartDateChange}
                             closable
                         />
@@ -421,11 +470,12 @@ export default class Experience extends React.Component {
                     <div className='column' style={{ width: '50%' }}>
                         <label>End Date:</label>
                         <DateInput
+                            minDate={this.getDateString(this.state.newExperience.start)}
                             disabled={this.state.isCurrentPosition}
                             dateFormat="DD/MM/YYYY"
                             name="date"
                             placeholder="Date"
-                            value={this.state.newExperience.end}
+                            value={this.state.newExperience.end.getDate()+"/"+(this.state.newExperience.end.getMonth()+1)+"/"+this.state.newExperience.end.getFullYear()}
                             onChange={this.handleEndDateChange}
                             closable
                         />

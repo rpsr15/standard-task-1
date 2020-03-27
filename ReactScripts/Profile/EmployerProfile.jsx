@@ -64,12 +64,12 @@ export default class EmployeeProfile extends React.Component {
                 let employerData = null;
                 if (res.employer) {
                     employerData = res.employer
-                    ////console.log("employerData", employerData)
+                    ////
                 }
                 this.updateWithoutSave(employerData)
             }.bind(this),
             error: function (res) {
-                //console.log(res.status)
+                //
             }
         }) 
         this.init()
@@ -115,7 +115,7 @@ export default class EmployeeProfile extends React.Component {
 
     validateField(fieldName, value) {
         //debugger
-        ////console.log("validateField!")
+        ////
         let fieldValidationErrors = this.state.formErrors;
         let emailValid = this.state.emailValid;
         let nameValid = this.state.nameValid;

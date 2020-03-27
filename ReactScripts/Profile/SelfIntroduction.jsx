@@ -7,8 +7,8 @@ export default class SelfIntroduction extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            summary: this.props.summary,
-            description: this.props.description
+            summary:  '',
+            description: ''
         }
     this.onSummaryChange = this.onSummaryChange.bind(this);
     this.onDescriptionChange = this.onDescriptionChange.bind(this);
@@ -37,8 +37,8 @@ export default class SelfIntroduction extends React.Component {
     componentWillReceiveProps(props)
     {
         this.setState({
-            summary: props.summary ? props.summary :'',
-            description: props.description
+            summary: (props.summary) ? props.summary : '',
+            description:  (props.description) ? props.description:''
         })
     }
     render() {

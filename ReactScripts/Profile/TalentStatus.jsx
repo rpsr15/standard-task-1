@@ -5,7 +5,7 @@ import { SingleInput } from '../Form/SingleInput.jsx';
 export default class TalentStatus extends React.Component {
     constructor(props) {
         super(props);
-        //console.log("status",this.props.status);
+        //
         this.state = {
             value: (this.props.status.status != '') ? this.props.status.status : ''
         }
@@ -26,7 +26,7 @@ export default class TalentStatus extends React.Component {
 
     componentWillReceiveProps(props)
     {
-        //console.log('rec props', props);
+        //
         if(props.status)
         {
             this.setState({

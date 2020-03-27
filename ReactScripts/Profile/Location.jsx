@@ -1,6 +1,7 @@
 ﻿import React from 'react'
 import Cookies from 'js-cookie'
 import { default as Countries } from '../../../../util/jsonFiles/countries.json';
+import { default as Cities } from '../../../../util/jsonFiles/cities.json';
 import { ChildSingleInput } from '../Form/SingleInput.jsx';
 import { Dropdown, Input } from 'semantic-ui-react';
 const countries =
@@ -87,13 +88,12 @@ export class Address extends React.Component {
 
     componentWillReceiveProps(props) {
 
-        var cities = null;
-        if(props.addressData.country.length > 0){
-         cities = Countries[props.addressData.country].map((city, index) => {
-            return { key: index, text: city, value: city }
-        })
-
+        var cities = [];
+        if(props.addressData.country.length > 0 && (props.addressData.country in Cities) ){
+          cities = Cities[props.addressData.country]
+           
         }
+        
         this.setState({
             selectedCountry: props.addressData.country
             , city: props.addressData.city
@@ -101,7 +101,7 @@ export class Address extends React.Component {
             , postcode: props.addressData.postCode
             , street: props.addressData.street,
             suburb: props.addressData.suburb,
-            cities: cities? cities: {}
+            cities: cities
 
         })
     }
@@ -125,8 +125,8 @@ export class Address extends React.Component {
         })
     }
 
-    renderEdit() {
-        {console.log(this.state.city)}
+    renderEdit() 
+        {
         return (
             <React.Fragment>
                 <div className='row' style={{}}>
@@ -243,7 +243,7 @@ export class Nationality extends React.Component {
     }
 
     render() {
-        //console.log("nationality data", this.state.countries[0]);
+        //
         return (
             <div style={{ width: '100%' }}>
                 <Dropdown style={{ width: '18rem', margin: '10px' }}

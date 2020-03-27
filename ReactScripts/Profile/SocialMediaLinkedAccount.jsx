@@ -9,7 +9,7 @@ export default class SocialMediaLinkedAccount extends Component {
     constructor(props) {
        
         super(props);
-        //console.log("inside",this.props.linkedAccounts);
+        //
         this.state = {
             showEditSection: false,
             linkedinUrl: this.props.linkedAccounts.linkedIn,
@@ -32,7 +32,7 @@ export default class SocialMediaLinkedAccount extends Component {
     handleEmailChange(evt) { this.setState({ email: evt.target.value }); }
 
     componentDidMount() {
-        //console.log("component did mount");
+        //
         $('.ui.button.social-media')
             .popup();
     }
@@ -73,20 +73,20 @@ export default class SocialMediaLinkedAccount extends Component {
     }
     onGithubClick(event, data) {
         event.preventDefault();
-        window.open(this.state.githubUrl, "_blank");
+        this.windowOpen(this.state.githubUrl);
 
 
     return false;
 }
 
     handleLinkedChange(event) {
-        //console.log(event.target.value);
+        //
         this.setState({
             linkedinUrl: event.target.value
         })
     }
     handleGithubChange(event) {
-        //console.log(event.target.value);
+        //
         this.setState({
             githubUrl: event.target.value
         })

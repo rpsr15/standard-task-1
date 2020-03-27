@@ -61,14 +61,14 @@
                 List<AddLanguageViewModel> langs = new List<AddLanguageViewModel>();
                 foreach(var lang in user.Languages)
                 {
-                    langs.Add(new AddLanguageViewModel { Name = lang.Language, Level = lang.LanguageLevel });
+                    langs.Add(new AddLanguageViewModel { Id = lang.Id,  Name = lang.Language, Level = lang.LanguageLevel });
                 }
 
 
                 List<AddSkillViewModel> skills = new List<AddSkillViewModel>();
                 foreach (var skill in user.Skills)
                 {
-                    skills.Add(new AddSkillViewModel { Name = skill.Skill, Level = skill.ExperienceLevel });
+                    skills.Add(new AddSkillViewModel {Id= skill.Id, Name = skill.Skill, Level = skill.ExperienceLevel });
                 }
 
                 List<ExperienceViewModel> experiences = new List<ExperienceViewModel>();
@@ -125,8 +125,8 @@
                     if (user.Id != null)
                     {
                    
-                        User existingUser = (await _userRepository.GetByIdAsync(user.Id));
-                        existingUser.FirstName = user.FirstName;
+                    User existingUser = (await _userRepository.GetByIdAsync(user.Id));
+                    existingUser.FirstName = user.FirstName;
                     existingUser.LastName = user.LastName;
                     existingUser.Email = user.Email;
                     existingUser.Phone = user.Phone;
@@ -144,8 +144,10 @@
                      List<UserLanguage> list = new List<UserLanguage>();
                     foreach (var lang in user.Languages)
                     {
+                        Console.WriteLine("id", lang.Id);
                         
                         list.Add(new UserLanguage {
+                            Id = lang.Id,
                             Language = lang.Name,
                             LanguageLevel = lang.Level
                         }); 
@@ -159,6 +161,7 @@
                         skillList.Add(
                             new UserSkill
                             {
+                                Id = skill.Id,
                                 Skill = skill.Name,
                                 ExperienceLevel = skill.Level
                             }
@@ -170,8 +173,7 @@
                     List<UserExperience> experienceList = new List<UserExperience>();
                     foreach(var exp in user.Experience)
                     {
-                        Console.WriteLine(" start date" + exp.Start);
-                        Console.WriteLine(" ene data" + exp.End);
+                        
                         UserExperience userExper = new UserExperience
                         {
                             Id = exp.Id,
